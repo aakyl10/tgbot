@@ -154,3 +154,14 @@ class DB:
                     app_version
                 )
             )
+import sqlite3
+from datetime import datetime
+
+DB_PATH = "data.db"
+
+def log_event(user_id: int, event_type: str, meta: str | None = None) -> None:
+    with sqlite3.connect(DB_PATH) as con:
+        con.execute(
+            "INSERT INTO events(user_id, event_type, ts, meta) VALUES(?,?,?,?)",
+            (user_id, event_type, datetime.now().isoformat(timespec="seconds"), meta),
+        )
